@@ -6,7 +6,7 @@ const ClientLayout = ({ children }) => {
   return (
     <React.Fragment>
       <Header />
-      <main className="main">{children}</main>
+      <main className="main py-30 min-h-96">{children}</main>
       <Footer />
     </React.Fragment>
   )
