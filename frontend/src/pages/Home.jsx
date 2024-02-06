@@ -1,13 +1,12 @@
-import CartDrawer from '@/components/Cart/CartDrawer'
+import Banner from '@/components/Banner/Banner'
 import ClientLayout from '@/layouts/ClientLayout'
-import React from 'react'
+import React, { useState } from 'react'
 
 const Home = () => {
   return (
     <React.Fragment>
       <ClientLayout>
-        <p>Home</p>
-        <CartDrawer />
+        <Banner />
       </ClientLayout>
     </React.Fragment>
   )
