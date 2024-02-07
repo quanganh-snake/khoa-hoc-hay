@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { cn } from './../../lib/utils'
 import { CiMail, CiSearch, CiShoppingCart } from 'react-icons/ci'
 import { NavLink, Link } from 'react-router-dom'
@@ -25,6 +25,7 @@ const Header = () => {
   const [isActiveMenuMobile, setIsActiveMenuMobile] = useState(false)
   const [isShowCategory, setIsShowCategory] = useState(false)
   const [isShowCart, setIsShowCart] = useState(false)
+  const [isScroll, setIsScroll] = useState(0)
   const menuMobileRef = useRef(null)
 
   const handleShowMenuMobile = () => {
@@ -40,9 +41,21 @@ const Header = () => {
 
   useClickOutside(menuMobileRef, handleShowMenuMobile)
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      setIsScroll(scrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
   return (
     <>
-      <header className={cn('sticky')}>
+      <header className={cn('')}>
         <div className="top-bar bg-sky-600 text-white">
           <div className="container flex flex-col md:flex-row items-center justify-between">
             <ul className="flex items-center gap-2 text-sm py-1">
@@ -91,7 +104,13 @@ const Header = () => {
           </div>
         </div>
         {/* End: .top-bar */}
-        <div className="header-main shadow-md lg:shadow-none my-2 py-2">
+        <div
+          className={cn(
+            'header-main shadow-md lg:shadow-none my-2 py-2',
+            isScroll > 100 &&
+              'fixed top-0 left-0 right-0 z-30 bg-white my-0 lg:shadow-xl animate__animated animate__fadeInDown',
+          )}
+        >
           <div className="container">
             <div className="grid grid-cols-12 items-center">
               <div
@@ -149,7 +168,7 @@ const Header = () => {
         {/* End: .header-main */}
         <div
           className={cn(
-            'absolute top-0 left-0 bottom-0 w-full min-h-screen lg:static lg:w-full lg:min-h-fit header-nav text-white bg-slate-400/70',
+            'absolute top-0 left-0 z-30 bottom-0 w-full min-h-screen lg:static lg:w-full lg:min-h-fit header-nav text-white bg-slate-400/70',
             isActiveMenuMobile
               ? 'animate__animated animate__fadeIn'
               : 'hidden lg:block',
@@ -182,8 +201,8 @@ const Header = () => {
                   <div
                     onClick={handleShowCategory}
                     className={cn(
-                        'flex items-center gap-1 px-3 py-2 bg-sky-800 cursor-pointer',
-                        isShowCategory && 'hidden lg:flex'
+                      'flex items-center gap-1 px-3 py-2 bg-sky-800 cursor-pointer',
+                      isShowCategory && 'hidden lg:flex',
                     )}
                   >
                     <MdOutlineMenu size={24} />
@@ -191,8 +210,10 @@ const Header = () => {
                   </div>
                   <div
                     className={cn(
-                      'hidden absolute top-full left-0 right-0 w-full mt-1',
-                      isShowCategory ? 'lg:block animate__animated animate__fadeIn' : '',
+                      'hidden absolute top-full left-0 right-0 z-30 w-full mt-1',
+                      isShowCategory
+                        ? 'lg:block animate__animated animate__fadeIn'
+                        : '',
                     )}
                   >
                     <ul className="text-slate-700 bg-white shadow-lg rounded-xl">
@@ -249,9 +270,7 @@ const Header = () => {
               <ul
                 className={cn(
                   'col-span-12 lg:col-span-9 flex flex-col lg:flex-row lg:items-center justify-evenly',
-                  !isShowCategory
-                    ? ''
-                    : 'hidden lg:flex',
+                  !isShowCategory ? '' : 'hidden lg:flex',
                 )}
               >
                 <li>
